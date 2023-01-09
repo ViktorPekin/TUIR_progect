@@ -9,15 +9,15 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  function handleEmail(e) {
+  function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value)
   }
 
-  function handlePassword(e) {
+  function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
     setPassword(e.target.value)
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault()
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {

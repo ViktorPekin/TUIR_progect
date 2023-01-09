@@ -1,13 +1,15 @@
+import * as React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 import Main from '../main/Main'
 import Login from '../login/Login'
-import ProtectedRoute from '../protectedRoute/ProtectedRoute'
 import Admin from '../admin/Admin'
 
-function App() {
+import ProtectedRoute, { ProtectedRouteProps } from '../protectedRoute/ProtectedRoute'
+
+const App = () => {
   const [loggedIn, setLoggedIn] = useState(false)
 
   const auth = getAuth()
@@ -21,19 +23,17 @@ function App() {
     })
   }, [])
 
+  const defaultProtectedRouteProps: Omit<ProtectedRouteProps, 'outlet'> = {
+    loggedIn: loggedIn ? loggedIn : localStorage.getItem('loggedIn') ? true : false,
+    authenticationPath: '/',
+  }
+
   return (
     <div className='App'>
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/login' element={<Login />} />
-        <Route
-          path='/admin'
-          element={
-            <ProtectedRoute path='/' loggedIn={loggedIn ? loggedIn : localStorage.getItem('loggedIn')}>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/admin' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Admin />} />}></Route>
       </Routes>
     </div>
   )
